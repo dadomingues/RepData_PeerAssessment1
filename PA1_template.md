@@ -11,7 +11,7 @@ I am using "lubridate".
 ## Loading and preprocessing the data
 
 Assumption: the "activity.zip" file is in the same directory.
-Loading the data in a raw format:
+Loading the data in a raw format extracting the CSV from the zip file:
 
 ```r
 unzip(zipfile="activity.zip")
@@ -86,20 +86,26 @@ qplot(data=steps.avg.by.interval, binwidth=300, margins=TRUE, geom="line",
       main="Average Daily Activity Pattern", stat="identity", 
       x=Interval, xlab="5 minutes interval",
       y=Steps, ylab="Average number of steps") +
-    scale_x_continuous(breaks = seq(0,max(steps.avg.by.interval$Interval),100))
+    scale_x_continuous(breaks = seq(0,max(steps.avg.by.interval$Interval),200))
 ```
 
 ![plot of chunk unnamed-chunk-6](figure/unnamed-chunk-6.png) 
 
-The **maximum** average of steps taken per day is given by:
+Question: **Which 5-minute interval,
+on average across all the days in the dataset,
+contains the maximum number of steps?**
+
+The interval with the **maximum** average of steps taken per day is given by:
 
 ```r
-max(steps.avg.by.interval$Steps)
+steps.avg.by.interval[which.max(steps.avg.by.interval$Steps),]
 ```
 
 ```
-## [1] 206.2
+##     Interval Steps
+## 104      835 206.2
 ```
+
 
 ## Imputing missing values
 
@@ -180,6 +186,20 @@ median(total.steps.by.day.filled$Steps)
 ## [1] 10766
 ```
 
+Question **Do these values differ from the estimates from the
+first part of the assignment?**
+
+We can say **yes**, they are different because we bring the mean and the median
+to a more regular number using de median to fill the messing values.
+
+Question **What is the impact of imputing missing data on the estimates
+of the total daily number of steps?**
+
+Many observation is considered the median value to the interval, so we get a
+more regular numbers. An other effetc observed is that the *mean* and the
+*median* now are the same value.
+
+
 ## Are there differences in activity patterns between weekdays and weekends?
 
 To do a good work and avoid problems with languages, I am using the library
@@ -220,8 +240,12 @@ qplot(data=steps.avg.by.interval.filled, binwidth=300, margins=TRUE, geom="line"
       x=interval, xlab="5 minutes interval",
       y=steps, ylab="Average number of steps") +
     facet_grid(type.of.day ~ .) + 
-    scale_x_continuous(breaks = seq(0,max(steps.avg.by.interval$Interval),100))
+    scale_x_continuous(breaks = seq(0,max(steps.avg.by.interval$Interval),200))
 ```
 
 ![plot of chunk unnamed-chunk-17](figure/unnamed-chunk-17.png) 
 
+So, in the weekend we have intervals with a less number of steps and more
+regular. In the weekdays we get interval with more steps before the same one in
+the weekdays with a peak and a small number of steps after that.
+**Yes, weekdays and weekends have differences in activity patterns.**
